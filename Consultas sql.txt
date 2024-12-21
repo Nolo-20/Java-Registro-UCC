@@ -1,0 +1,102 @@
+Consultas:
+
+1. Calificaciones de estudiantes en un programa específico para un semestre dado
+
+SELECT e.Nombre1, e.Apellido1, c.Nota, a.Nombre AS Asignatura, s.Semestre
+FROM Estudiante e
+JOIN Calificacion c ON e.Cedula = c.Cedula
+JOIN Asignatura a ON c.ID_asignatura = a.ID_asignatura
+JOIN Semestre s ON c.ID_semestre = s.ID_semestre
+WHERE c.ID_programa = 2 AND c.ID_semestre = 2030;
+
+2.Facultades que tienen el mayor número de programas y los nombres de dichos programas
+
+SELECT f.Facultad, COUNT(DISTINCT p.ID_programa) AS Numero_Programas, GROUP_CONCAT(p.Programa) AS Programas
+FROM Facultad f
+JOIN Facultad_Sede fs ON f.ID_facultad = fs.ID_facultad
+JOIN Programa p ON fs.ID_programa = p.ID_programa
+GROUP BY f.ID_facultad
+ORDER BY Numero_Programas DESC
+LIMIT 1;
+
+
+3. Encontrar los estudiantes que tienen la calificación más alta en un programa específico.
+
+SELECT e.Cedula, e.Nombre1, e.Apellido1, p.Programa, MAX(c.Nota) AS CalificacionMaxima
+FROM Estudiante e
+INNER JOIN programa_estudiante pe ON e.ID_estudiante = pe.ID_estudiante
+INNER JOIN Programa p ON pe.ID_programa = p.ID_programa
+INNER JOIN Calificacion c ON e.Cedula = c.Cedula
+WHERE p.Programa = 'Nombre del programa'
+GROUP BY e.Cedula, e.Nombre1, e.Apellido1, p.Programa;
+
+
+
+4. Encontrar todos los estudiantes que han aprobado en las asignatura
+
+SELECT c.Cedula, e.Nombre1, e.Apellido1, c.ID_programa, p.Programa, a.Nombre AS Asignatura, c.Nota
+FROM calificacion c
+INNER JOIN estudiante e ON c.Cedula = e.Cedula 
+INNER JOIN programa p ON c.ID_programa = p.ID_programa 
+INNER JOIN asignatura a ON c.ID_asignatura = a.ID_asignatura
+WHERE c.Nota >= 3.00;
+
+
+5. Horarios y profesores para una asignatura en particular
+
+SELECT a.Nombre AS Asignatura, h.Dias, h.Horas, p.Nombre1, p.Apellido1
+FROM Asignatura a
+JOIN Horario h ON a.ID_asignatura = h.ID_asignatura
+JOIN Profesor p ON h.ID_profesor = p.ID_profesor
+WHERE a.ID_asignatura = 1;
+
+6. Encontrar todos los estudiantes inscritos en un programa de estudios en particular.
+
+SELECT e.Cedula, e.ID_estudiante, e.Nombre1, e.Apellido1, p.ID_programa, p.Programa
+FROM Estudiante e
+INNER JOIN programa_estudiante pe ON e.ID_estudiante = pe.ID_estudiante
+INNER JOIN Programa p ON pe.ID_programa = p.ID_programa
+WHERE pe.ID_programa = 5;
+
+7. Obtener el promedio de calificaciones de un estudiante en un semestre específico.
+
+SELECT AVG(Nota) AS Promedio
+FROM Calificacion
+WHERE Cedula = 3451298 AND ID_semestre = 2020;
+
+8. Encontrar los estudiantes que tienen la calificación más alta en un programa específico.
+
+SELECT e.Cedula, e.Nombre1, e.Apellido1, p.Programa, MAX(c.Nota) AS CalificacionMaxima
+FROM Estudiante e
+INNER JOIN programa_estudiante pe ON e.ID_estudiante = pe.ID_estudiante
+INNER JOIN Programa p ON pe.ID_programa = p.ID_programa
+INNER JOIN Calificacion c ON e.Cedula = c.Cedula
+WHERE p.Programa = 'ingenieria de sistemas'
+GROUP BY e.Cedula, e.Nombre1, e.Apellido1, p.Programa;
+
+9. recupera el horario de un estudiante con un ID_estudiante específico, mostrando los nombres de las asignaturas, los días y las horas.
+
+SELECT 
+    h.ID_estudiante,
+    a.Nombre AS Asignatura,
+    h.Dias,
+    h.Horas,
+    h.Fecha_inicio,
+    h.Fecha_final
+FROM 
+    horario h
+JOIN 
+    asignatura a ON h.ID_asignatura = a.ID_asignatura
+WHERE 
+    h.ID_estudiante = 54931;
+
+10. Listar los estudiantes mujeres en una carrera especifica 
+
+SELECT e.Nombre1, e.Nombre2, e.Apellido1, e.Apellido2, e.Cedula, p.Programa
+FROM Estudiante e
+JOIN programa_estudiante pe ON e.ID_estudiante = pe.ID_estudiante
+JOIN Programa p ON pe.ID_programa = p.ID_programa
+WHERE e.Genero = 'Femenino' AND p.ID_programa = 1;
+
+
+
